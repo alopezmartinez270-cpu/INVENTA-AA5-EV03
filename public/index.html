@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>INVENTA API - Documentacion</title>
+  <style>
+    body { margin: 0; font-family: Arial, sans-serif; color: #17202a; background: #f4f6f7; }
+    header { background: #176b45; color: white; padding: 28px max(24px, calc((100% - 1080px) / 2)); }
+    main { max-width: 1080px; margin: 28px auto; padding: 0 24px 40px; }
+    h1, h2 { margin-top: 0; }
+    .status { display: inline-block; padding: 6px 10px; background: #d5f5e3; color: #145a32; border-radius: 4px; font-weight: bold; }
+    table { width: 100%; border-collapse: collapse; background: white; margin: 14px 0 28px; }
+    th, td { padding: 11px; border: 1px solid #ccd1d1; text-align: left; vertical-align: top; }
+    th { background: #e8f5ee; }
+    code { font-family: Consolas, monospace; }
+    .method { font-weight: bold; }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>INVENTA API</h1>
+    <p>Servicios web para la gestion de clientes, productos y ventas.</p>
+  </header>
+  <main>
+    <p class="status">Servicio activo</p>
+    <h2>Endpoints disponibles</h2>
+    <table>
+      <thead><tr><th>Metodo</th><th>Endpoint</th><th>Descripcion</th></tr></thead>
+      <tbody>
+        <tr><td class="method">GET</td><td><code>/api/health</code></td><td>Verifica el estado de la API.</td></tr>
+        <tr><td class="method">POST</td><td><code>/api/registro</code></td><td>Registra un usuario.</td></tr>
+        <tr><td class="method">POST</td><td><code>/api/login</code></td><td>Valida credenciales.</td></tr>
+        <tr><td class="method">GET / POST</td><td><code>/api/clientes</code></td><td>Lista o crea clientes.</td></tr>
+        <tr><td class="method">GET / PUT / DELETE</td><td><code>/api/clientes/:id</code></td><td>Consulta, actualiza o elimina un cliente.</td></tr>
+        <tr><td class="method">GET / POST</td><td><code>/api/productos</code></td><td>Lista o crea productos.</td></tr>
+        <tr><td class="method">GET</td><td><code>/api/productos/bajo-stock?limite=5</code></td><td>Identifica productos que requieren reposicion.</td></tr>
+        <tr><td class="method">GET / PUT / DELETE</td><td><code>/api/productos/:id</code></td><td>Consulta, actualiza o elimina un producto.</td></tr>
+        <tr><td class="method">GET / POST</td><td><code>/api/ventas</code></td><td>Lista o registra ventas.</td></tr>
+        <tr><td class="method">GET</td><td><code>/api/ventas/:id</code></td><td>Consulta el detalle de una venta.</td></tr>
+        <tr><td class="method">PUT</td><td><code>/api/ventas/:id/anular</code></td><td>Anula una venta y reintegra sus existencias.</td></tr>
+      </tbody>
+    </table>
+    <p>La documentacion completa, cuerpos JSON, respuestas y codigos HTTP se encuentran en <code>docs/DOCUMENTACION_API.md</code>.</p>
+  </main>
+</body>
+</html>
