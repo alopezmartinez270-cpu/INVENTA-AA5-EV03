@@ -1,0 +1,30 @@
+INVENTA API - ENDPOINTS
+URL base: http://localhost:3000
+
+ESTADO Y ACCESO
+GET    /api/health                    Verificar disponibilidad de la API
+POST   /api/registro                  Registrar usuario del sistema
+POST   /api/login                     Validar credenciales
+
+CLIENTES
+GET    /api/clientes                  Consultar todos los clientes
+POST   /api/clientes                  Registrar cliente
+GET    /api/clientes/:id              Consultar cliente por identificador
+PUT    /api/clientes/:id              Actualizar cliente
+DELETE /api/clientes/:id              Eliminar cliente sin ventas asociadas
+
+PRODUCTOS E INVENTARIO
+GET    /api/productos                 Consultar todos los productos
+POST   /api/productos                 Registrar producto
+GET    /api/productos/bajo-stock      Consultar existencias bajas
+GET    /api/productos/:id             Consultar producto por identificador
+PUT    /api/productos/:id             Actualizar producto
+DELETE /api/productos/:id             Eliminar producto sin ventas asociadas
+
+VENTAS
+GET    /api/ventas                    Consultar historial de ventas
+POST   /api/ventas                    Registrar venta y descontar existencias
+GET    /api/ventas/:id                Consultar detalle de una venta
+PUT    /api/ventas/:id/anular         Anular venta y reintegrar existencias
+
+Consulte docs/DOCUMENTACION_API.md para cuerpos JSON, respuestas y codigos HTTP.

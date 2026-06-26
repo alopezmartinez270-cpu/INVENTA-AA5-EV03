@@ -1,0 +1,171 @@
+openapi: 3.0.3
+info:
+  title: INVENTA API
+  version: 1.0.0
+  description: Servicios de clientes, productos, inventario y ventas del proyecto INVENTA.
+servers:
+  - url: http://localhost:3000
+paths:
+  /api/health:
+    get:
+      summary: Verificar estado del servicio
+      responses:
+        '200': { description: Servicio activo }
+  /api/registro:
+    post:
+      summary: Registrar usuario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credenciales'
+      responses:
+        '201': { description: Usuario registrado }
+        '409': { description: Usuario duplicado }
+  /api/login:
+    post:
+      summary: Iniciar sesiÃ³n
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Credenciales'
+      responses:
+        '200': { description: AutenticaciÃ³n satisfactoria }
+        '401': { description: Credenciales incorrectas }
+  /api/clientes:
+    get:
+      summary: Listar clientes
+      responses:
+        '200': { description: Lista de clientes }
+    post:
+      summary: Registrar cliente
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Cliente'
+      responses:
+        '201': { description: Cliente creado }
+  /api/clientes/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      summary: Consultar cliente
+      responses:
+        '200': { description: Cliente encontrado }
+        '404': { description: Cliente inexistente }
+    put:
+      summary: Actualizar cliente
+      responses:
+        '200': { description: Cliente actualizado }
+    delete:
+      summary: Eliminar cliente sin ventas
+      responses:
+        '200': { description: Cliente eliminado }
+        '409': { description: Cliente asociado a ventas }
+  /api/productos:
+    get:
+      summary: Listar productos
+      responses:
+        '200': { description: CatÃ¡logo de productos }
+    post:
+      summary: Registrar producto
+      responses:
+        '201': { description: Producto creado }
+  /api/productos/bajo-stock:
+    get:
+      summary: Consultar productos con existencias bajas
+      parameters:
+        - in: query
+          name: limite
+          schema: { type: integer, default: 5, minimum: 0 }
+      responses:
+        '200': { description: Productos bajo el lÃ­mite }
+  /api/productos/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      summary: Consultar producto
+      responses:
+        '200': { description: Producto encontrado }
+    put:
+      summary: Actualizar producto
+      responses:
+        '200': { description: Producto actualizado }
+    delete:
+      summary: Eliminar producto sin ventas
+      responses:
+        '200': { description: Producto eliminado }
+  /api/ventas:
+    get:
+      summary: Listar ventas
+      responses:
+        '200': { description: Historial de ventas }
+    post:
+      summary: Registrar venta y descontar inventario
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NuevaVenta'
+      responses:
+        '201': { description: Venta registrada }
+        '409': { description: Stock insuficiente }
+  /api/ventas/{id}:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    get:
+      summary: Consultar venta
+      responses:
+        '200': { description: Detalle de venta }
+  /api/ventas/{id}/anular:
+    parameters:
+      - $ref: '#/components/parameters/Id'
+    put:
+      summary: Anular venta y reintegrar existencias
+      responses:
+        '200': { description: Venta anulada }
+        '409': { description: Venta previamente anulada }
+components:
+  parameters:
+    Id:
+      in: path
+      name: id
+      required: true
+      schema: { type: integer, minimum: 1 }
+  schemas:
+    Credenciales:
+      type: object
+      required: [usuario, contrasena]
+      properties:
+        usuario: { type: string, example: administrador.inventa }
+        contrasena: { type: string, example: Inventa2026* }
+    Cliente:
+      type: object
+      required: [nombre, apellido, documento, correo]
+      properties:
+        nombre: { type: string }
+        apellido: { type: string }
+        documento: { type: string }
+        correo: { type: string }
+        telefono: { type: string }
+        direccion: { type: string }
+    NuevaVenta:
+      type: object
+      required: [idCliente, detalles]
+      properties:
+        idCliente: { type: integer }
+        detalles:
+          type: array
+          minItems: 1
+          items:
+            type: object
+            required: [idProducto, cantidad]
+            properties:
+              idProducto: { type: integer }
+              cantidad: { type: integer, minimum: 1 }
