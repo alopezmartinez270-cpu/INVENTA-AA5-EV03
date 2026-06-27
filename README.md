@@ -1,26 +1,26 @@
 # INVENTA API
 
-Proyecto de servicios web para INVENTA, sistema de control de clientes, productos, inventario y ventas. Esta versiÃ³n traslada a una API REST las entidades desarrolladas previamente en los mÃ³dulos Java/JSP y Spring Boot del proyecto formativo.
+Proyecto de servicios web para INVENTA, sistema de control de clientes, productos, inventario y ventas. Esta versión traslada a una API REST las entidades desarrolladas previamente en los módulos Java/JSP y Spring Boot del proyecto formativo.
 
 ## Alcance
 
-- Registro e inicio de sesiÃ³n de usuarios.
-- AdministraciÃ³n de clientes con documento Ãºnico.
-- AdministraciÃ³n de productos por categorÃ­a.
+- Registro e inicio de sesión de usuarios.
+- Administración de clientes con documento único.
+- Administración de productos por categoría.
 - Consulta de productos con existencias bajas.
-- Registro de ventas con mÃºltiples detalles.
-- ValidaciÃ³n de disponibilidad antes de vender.
-- Descuento automÃ¡tico de existencias.
-- AnulaciÃ³n de ventas con reintegro de existencias.
+- Registro de ventas con múltiples detalles.
+- Validación de disponibilidad antes de vender.
+- Descuento automático de existencias.
+- Anulación de ventas con reintegro de existencias.
 
-## EjecuciÃ³n
+## Ejecución
 
 1. Tener Node.js 18 o superior.
 2. Ejecutar `INICIAR_SERVIDOR.bat` en Windows o `npm start` desde una terminal.
 3. Abrir `http://localhost:3000/`.
 4. Probar los endpoints desde Postman usando `http://localhost:3000` como URL base.
 
-No se requieren paquetes externos ni una instalaciÃ³n de base de datos. La informaciÃ³n se conserva en `data/db.json`.
+No se requieren paquetes externos ni una instalación de base de datos. La información se conserva en `data/db.json`.
 
 ## Pruebas
 
@@ -30,14 +30,14 @@ Ejecutar:
 npm test
 ```
 
-Las pruebas cubren autenticaciÃ³n, clientes, productos, control de stock, ventas y anulaciones.
+Las pruebas cubren autenticación, clientes, productos, control de stock, ventas y anulaciones.
 
-## DocumentaciÃ³n
+## Documentación
 
-- `docs/DISENO_SERVICIOS.md`: anÃ¡lisis, modelo y decisiones de diseÃ±o.
+- `docs/DISENO_SERVICIOS.md`: análisis, modelo y decisiones de diseño.
 - `docs/DOCUMENTACION_API.md`: uso detallado de cada servicio.
 - `docs/openapi.yaml`: contrato OpenAPI 3.0 importable en Postman.
-- `ENDPOINTS_API.txt`: inventario rÃ¡pido de endpoints.
+- `ENDPOINTS_API.txt`: inventario rápido de endpoints.
 
 ## Versionamiento
 

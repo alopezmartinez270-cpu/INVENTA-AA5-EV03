@@ -1,20 +1,20 @@
-# DiseÃ±o de servicios web de INVENTA
+# Diseño de servicios web de INVENTA
 
 ## 1. Contexto del proyecto
 
-INVENTA administra las operaciones bÃ¡sicas de un establecimiento comercial: datos de clientes, catÃ¡logo de productos, existencias y ventas. Las evidencias anteriores implementaron estas entidades mediante Java/JSP y posteriormente con Spring Boot. La presente API conserva ese modelo y expone sus operaciones mediante HTTP y JSON.
+INVENTA administra las operaciones básicas de un establecimiento comercial: datos de clientes, catálogo de productos, existencias y ventas. Las evidencias anteriores implementaron estas entidades mediante Java/JSP y posteriormente con Spring Boot. La presente API conserva ese modelo y expone sus operaciones mediante HTTP y JSON.
 
 ## 2. Necesidades identificadas
 
 | Necesidad de INVENTA | Servicio propuesto | Resultado esperado |
 |---|---|---|
-| Comprobar que el backend estÃ¡ disponible | `GET /api/health` | ConfirmaciÃ³n de estado y versiÃ³n |
-| Controlar el acceso de usuarios | Registro y login | Alta de usuario y validaciÃ³n de credenciales |
-| Mantener informaciÃ³n completa del comprador | CRUD de clientes | Cliente con nombre, apellido, documento, contacto y direcciÃ³n |
-| Mantener catÃ¡logo y existencias | CRUD de productos | Producto con descripciÃ³n, precio, stock y categorÃ­a |
-| Anticipar faltantes | Consulta de bajo stock | RelaciÃ³n de productos con stock menor o igual al lÃ­mite |
-| Registrar una operaciÃ³n comercial | CreaciÃ³n de venta | Encabezado, detalles, total y descuento de stock |
-| Corregir una venta anulada | AnulaciÃ³n | Cambio de estado y devoluciÃ³n de unidades al inventario |
+| Comprobar que el backend está disponible | `GET /api/health` | Confirmación de estado y versión |
+| Controlar el acceso de usuarios | Registro y login | Alta de usuario y validación de credenciales |
+| Mantener información completa del comprador | CRUD de clientes | Cliente con nombre, apellido, documento, contacto y dirección |
+| Mantener catálogo y existencias | CRUD de productos | Producto con descripción, precio, stock y categoría |
+| Anticipar faltantes | Consulta de bajo stock | Relación de productos con stock menor o igual al límite |
+| Registrar una operación comercial | Creación de venta | Encabezado, detalles, total y descuento de stock |
+| Corregir una venta anulada | Anulación | Cambio de estado y devolución de unidades al inventario |
 
 ## 3. Modelo de datos
 
@@ -22,31 +22,31 @@ INVENTA administra las operaciones bÃ¡sicas de un establecimiento comercial: d
 
 `id`, `usuario`, `contrasenaHash`, `creadoEn`.
 
-La contraseÃ±a no se guarda como texto visible. Se almacena un resumen SHA-256 para evitar exponerla directamente en el archivo de datos.
+La contraseña no se guarda como texto visible. Se almacena un resumen SHA-256 para evitar exponerla directamente en el archivo de datos.
 
 ### Cliente
 
 `id`, `nombre`, `apellido`, `documento`, `correo`, `telefono`, `direccion`.
 
-El documento identifica de manera Ãºnica al cliente. Se conserva la separaciÃ³n entre nombre y apellido empleada por el proyecto original.
+El documento identifica de manera única al cliente. Se conserva la separación entre nombre y apellido empleada por el proyecto original.
 
 ### Producto
 
 `id`, `nombre`, `descripcion`, `precio`, `stock`, `categoria`.
 
-Las categorÃ­as admitidas corresponden al formulario histÃ³rico de INVENTA: Ropa, Calzado, Accesorios, ElectrÃ³nica, Hogar y Otros. En JSON se usa `Electronica` sin tilde para simplificar la interoperabilidad.
+Las categorías admitidas corresponden al formulario histórico de INVENTA: Ropa, Calzado, Accesorios, Electrónica, Hogar y Otros. En JSON se usa `Electronica` sin tilde para simplificar la interoperabilidad.
 
 ### Venta y detalle
 
 La venta contiene `id`, `idCliente`, `nombreCliente`, `fechaVenta`, `total`, `estado` y `detalles`. Cada detalle guarda `idProducto`, `nombreProducto`, `cantidad`, `precioUnitario` y `subtotal`.
 
-Los nombres del cliente y del producto quedan registrados como referencia histÃ³rica. AsÃ­, una consulta posterior conserva el contexto comercial aunque los datos maestros cambien.
+Los nombres del cliente y del producto quedan registrados como referencia histórica. Así, una consulta posterior conserva el contexto comercial aunque los datos maestros cambien.
 
 ## 4. Reglas de negocio
 
 1. No se registran dos clientes con el mismo documento.
 2. El precio debe ser mayor que cero y el stock no puede ser negativo.
-3. Cada producto pertenece a una categorÃ­a reconocida por INVENTA.
+3. Cada producto pertenece a una categoría reconocida por INVENTA.
 4. Una venta requiere un cliente existente y al menos un detalle.
 5. Un producto no puede repetirse dentro de la misma venta.
 6. La cantidad vendida debe ser un entero positivo.
@@ -62,17 +62,17 @@ Los nombres del cliente y del producto quedan registrados como referencia histÃ
 - `src/app.js`: rutas, validaciones y reglas de negocio.
 - `src/store.js`: lectura y escritura controlada de la base JSON.
 - `data/db.json`: persistencia local portable.
-- `public/index.html`: Ã­ndice de documentaciÃ³n del servicio.
-- `test/api.test.js`: verificaciÃ³n automatizada de los flujos principales.
+- `public/index.html`: índice de documentación del servicio.
+- `test/api.test.js`: verificación automatizada de los flujos principales.
 
-Se eligiÃ³ Node.js con mÃ³dulos nativos para que el instructor pueda ejecutar la soluciÃ³n sin descargar paquetes. La persistencia JSON permite demostrar el ciclo completo de los servicios y mantener los datos entre ejecuciones.
+Se eligió Node.js con módulos nativos para que el instructor pueda ejecutar la solución sin descargar paquetes. La persistencia JSON permite demostrar el ciclo completo de los servicios y mantener los datos entre ejecuciones.
 
 ## 6. Convenciones HTTP
 
-- `200 OK`: consulta, actualizaciÃ³n, autenticaciÃ³n o anulaciÃ³n correcta.
+- `200 OK`: consulta, actualización, autenticación o anulación correcta.
 - `201 Created`: recurso creado.
-- `400 Bad Request`: cuerpo incompleto o dato invÃ¡lido.
+- `400 Bad Request`: cuerpo incompleto o dato inválido.
 - `401 Unauthorized`: credenciales incorrectas.
 - `404 Not Found`: recurso inexistente.
-- `409 Conflict`: duplicado, falta de stock o restricciÃ³n de integridad.
+- `409 Conflict`: duplicado, falta de stock o restricción de integridad.
 - `500 Internal Server Error`: fallo inesperado del servidor.

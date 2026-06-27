@@ -4,4 +4,4 @@ Evidencia: GA7-220501096-AA5-EV03
 Repositorio de continuidad del proyecto INVENTA:
 https://github.com/jhosebyt17-ops/inventa-AA3-EV01
 
-El proyecto entregado incluye historial Git local y documentaciÃ³n de la nueva API.
+El proyecto entregado incluye historial Git local y documentación de la nueva API.

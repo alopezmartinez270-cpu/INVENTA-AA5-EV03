@@ -25,7 +25,7 @@ paths:
         '409': { description: Usuario duplicado }
   /api/login:
     post:
-      summary: Iniciar sesiÃ³n
+      summary: Iniciar sesión
       requestBody:
         required: true
         content:
@@ -33,7 +33,7 @@ paths:
             schema:
               $ref: '#/components/schemas/Credenciales'
       responses:
-        '200': { description: AutenticaciÃ³n satisfactoria }
+        '200': { description: Autenticación satisfactoria }
         '401': { description: Credenciales incorrectas }
   /api/clientes:
     get:
@@ -71,7 +71,7 @@ paths:
     get:
       summary: Listar productos
       responses:
-        '200': { description: CatÃ¡logo de productos }
+        '200': { description: Catálogo de productos }
     post:
       summary: Registrar producto
       responses:
@@ -84,7 +84,7 @@ paths:
           name: limite
           schema: { type: integer, default: 5, minimum: 0 }
       responses:
-        '200': { description: Productos bajo el lÃ­mite }
+        '200': { description: Productos bajo el límite }
   /api/productos/{id}:
     parameters:
       - $ref: '#/components/parameters/Id'

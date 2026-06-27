@@ -43,7 +43,7 @@ test('registra usuario, evita duplicados y valida credenciales', async () => {
   assert.equal((await request('POST', '/api/login', { ...credenciales, contrasena: 'Incorrecta' })).status, 401);
 });
 
-test('registra un cliente con el modelo histÃ³rico de INVENTA', async () => {
+test('registra un cliente con el modelo histórico de INVENTA', async () => {
   const cliente = {
     nombre: 'Laura',
     apellido: 'Gomez Restrepo',
@@ -59,7 +59,7 @@ test('registra un cliente con el modelo histÃ³rico de INVENTA', async () => {
   assert.equal((await request('POST', '/api/clientes', cliente)).status, 409);
 });
 
-test('registra productos con categorÃ­a y detecta bajo stock', async () => {
+test('registra productos con categoría y detecta bajo stock', async () => {
   const camisa = await request('POST', '/api/productos', {
     nombre: 'Camisa Oxford manga larga',
     descripcion: 'Camisa formal azul, talla M',
@@ -120,7 +120,7 @@ test('rechaza venta sin existencias suficientes y productos repetidos', async ()
   assert.equal(repetido.status, 400);
 });
 
-test('anula la venta, reintegra stock y evita una segunda anulaciÃ³n', async () => {
+test('anula la venta, reintegra stock y evita una segunda anulación', async () => {
   const anulacion = await request('PUT', '/api/ventas/1/anular');
   assert.equal(anulacion.status, 200);
   assert.equal(anulacion.body.venta.estado, 'ANULADA');
