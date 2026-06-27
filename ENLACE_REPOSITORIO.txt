@@ -1,7 +1,9 @@
 Proyecto: INVENTA API - Servicios de clientes, productos, inventario y ventas
 Evidencia: GA7-220501096-AA5-EV03
 
-Repositorio de continuidad del proyecto INVENTA:
-https://github.com/jhosebyt17-ops/inventa-AA3-EV01
+Repositorio GitHub de la evidencia:
+https://github.com/alopezmartinez270-cpu/INVENTA-AA5-EV03
 
-El proyecto entregado incluye historial Git local y documentación de la nueva API.
+Rama principal: main
+El repositorio contiene el código, la documentación técnica, el contrato
+OpenAPI y las pruebas automatizadas de la solución.
