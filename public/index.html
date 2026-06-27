@@ -259,7 +259,7 @@
       try {
         const data = await api('/api/health');
         document.getElementById('serviceDot').classList.add('online');
-        document.getElementById('serviceText').textContent = `${data.servicio} activa`;
+        document.getElementById('serviceText').textContent = `${data.servicio} activa · sincronización automática`;
       } catch {
         document.getElementById('serviceText').textContent = 'Servicio no disponible';
       }
@@ -293,9 +293,15 @@
 
     async function loadSalesData() {
       try {
+        const selectedClient = field('ventaCliente').value;
+        const selectedProduct = field('ventaProducto').value;
+        const selectedQuantity = field('ventaCantidad').value;
         [state.clientes, state.productos, state.ventas] = await Promise.all([api('/api/clientes'), api('/api/productos'), api('/api/ventas')]);
         document.getElementById('ventaCliente').innerHTML = '<option value="">Seleccionar cliente</option>' + state.clientes.map(item => `<option value="${item.id}">${escapeHtml(item.nombre)} ${escapeHtml(item.apellido)} - ${escapeHtml(item.documento)}</option>`).join('');
         document.getElementById('ventaProducto').innerHTML = '<option value="">Seleccionar producto</option>' + state.productos.filter(item => item.stock > 0).map(item => `<option value="${item.id}">${escapeHtml(item.nombre)} | ${money(item.precio)} | stock ${item.stock}</option>`).join('');
+        if (state.clientes.some(item => String(item.id) === selectedClient)) field('ventaCliente').value = selectedClient;
+        if (state.productos.some(item => String(item.id) === selectedProduct && item.stock > 0)) field('ventaProducto').value = selectedProduct;
+        field('ventaCantidad').value = selectedQuantity || 1;
         document.getElementById('saleTable').innerHTML = state.ventas.length ? `<table><thead><tr><th>Venta</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Acción</th></tr></thead><tbody>${state.ventas.map(item => `<tr><td>#${item.id}<br>${new Date(item.fechaVenta).toLocaleString('es-CO')}</td><td>${escapeHtml(item.nombreCliente)}</td><td>${money(item.total)}</td><td><span class="${item.estado === 'ACTIVA' ? 'status-active' : 'status-cancelled'}">${item.estado}</span></td><td>${item.estado === 'ACTIVA' ? `<button class="btn btn-danger btn-small" onclick="cancelSale(${item.id})">Anular</button>` : 'Sin acciones'}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">No hay ventas registradas.</div>';
         renderCart();
       } catch (error) { notice(error.message, 'error'); }
@@ -410,6 +416,25 @@
       const body = { idCliente, detalles: state.cart.map(item => ({ idProducto: item.id, cantidad: item.cantidad })) };
       try { const venta = await api('/api/ventas', { method: 'POST', body: JSON.stringify(body) }); notice(`Venta #${venta.id} registrada por ${money(venta.total)}.`); state.cart = []; loadSalesData(); refreshDashboard(); } catch (error) { notice(error.message, 'error'); }
     });
+
+    let synchronizing = false;
+    async function synchronizeActiveView() {
+      if (synchronizing || document.hidden) return;
+      synchronizing = true;
+      try {
+        const activeView = document.querySelector('.view.active')?.id;
+        if (activeView === 'inicio') await refreshDashboard();
+        if (activeView === 'clientes') await loadClients();
+        if (activeView === 'productos') await loadProducts();
+        if (activeView === 'ventas') await loadSalesData();
+      } finally {
+        synchronizing = false;
+      }
+    }
+
+    window.addEventListener('focus', synchronizeActiveView);
+    document.addEventListener('visibilitychange', () => { if (!document.hidden) synchronizeActiveView(); });
+    setInterval(synchronizeActiveView, 4000);
 
     checkHealth();
     refreshDashboard();
