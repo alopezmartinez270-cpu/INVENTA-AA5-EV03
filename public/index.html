@@ -3,45 +3,416 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>INVENTA API - Documentacion</title>
+  <title>INVENTA | Gestión comercial</title>
   <style>
-    body { margin: 0; font-family: Arial, sans-serif; color: #17202a; background: #f4f6f7; }
-    header { background: #176b45; color: white; padding: 28px max(24px, calc((100% - 1080px) / 2)); }
-    main { max-width: 1080px; margin: 28px auto; padding: 0 24px 40px; }
-    h1, h2 { margin-top: 0; }
-    .status { display: inline-block; padding: 6px 10px; background: #d5f5e3; color: #145a32; border-radius: 4px; font-weight: bold; }
-    table { width: 100%; border-collapse: collapse; background: white; margin: 14px 0 28px; }
-    th, td { padding: 11px; border: 1px solid #ccd1d1; text-align: left; vertical-align: top; }
-    th { background: #e8f5ee; }
-    code { font-family: Consolas, monospace; }
-    .method { font-weight: bold; }
+    :root {
+      --green-900: #14532d;
+      --green-800: #166534;
+      --green-700: #15803d;
+      --green-100: #dcfce7;
+      --green-50: #f0fdf4;
+      --ink: #17211b;
+      --muted: #5f6b63;
+      --line: #d7ded9;
+      --surface: #ffffff;
+      --canvas: #f4f7f5;
+      --danger: #b42318;
+      --danger-bg: #fef3f2;
+      --warning: #8a4b08;
+      --warning-bg: #fff7e6;
+    }
+
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: Arial, sans-serif; color: var(--ink); background: var(--canvas); }
+    button, input, select { font: inherit; }
+    button { cursor: pointer; }
+    .topbar { background: var(--green-900); color: white; }
+    .topbar-inner { max-width: 1240px; margin: auto; padding: 18px 24px; display: flex; align-items: center; justify-content: space-between; gap: 20px; }
+    .brand { font-size: 24px; font-weight: 700; }
+    .brand small { display: block; margin-top: 3px; font-size: 13px; font-weight: 400; color: #d8f3df; }
+    .service-state { display: flex; align-items: center; gap: 8px; font-size: 14px; }
+    .dot { width: 9px; height: 9px; border-radius: 50%; background: #f0b429; }
+    .dot.online { background: #4ade80; }
+    .nav-wrap { background: white; border-bottom: 1px solid var(--line); position: sticky; top: 0; z-index: 5; }
+    nav { max-width: 1240px; margin: auto; padding: 0 24px; display: flex; overflow-x: auto; }
+    .nav-button { border: 0; border-bottom: 3px solid transparent; background: transparent; padding: 14px 16px 11px; color: var(--muted); white-space: nowrap; font-weight: 600; }
+    .nav-button:hover { color: var(--green-800); background: var(--green-50); }
+    .nav-button.active { color: var(--green-800); border-bottom-color: var(--green-700); }
+    main { max-width: 1240px; margin: 0 auto; padding: 28px 24px 50px; }
+    .view { display: none; }
+    .view.active { display: block; }
+    .page-heading { margin-bottom: 20px; }
+    .page-heading h1 { margin: 0 0 6px; font-size: 28px; }
+    .page-heading p { margin: 0; color: var(--muted); }
+    .stats { display: grid; grid-template-columns: repeat(4, minmax(0, 1fr)); gap: 14px; margin-bottom: 24px; }
+    .stat { background: white; border: 1px solid var(--line); border-radius: 6px; padding: 18px; }
+    .stat-label { color: var(--muted); font-size: 13px; }
+    .stat-value { display: block; margin-top: 8px; font-size: 28px; font-weight: 700; color: var(--green-800); }
+    .panel-grid { display: grid; grid-template-columns: minmax(300px, 0.8fr) minmax(460px, 1.4fr); gap: 18px; align-items: start; }
+    .auth-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 18px; }
+    .panel { background: var(--surface); border: 1px solid var(--line); border-radius: 6px; }
+    .panel-header { padding: 16px 18px; border-bottom: 1px solid var(--line); display: flex; align-items: center; justify-content: space-between; gap: 12px; }
+    .panel-header h2 { margin: 0; font-size: 18px; }
+    .panel-body { padding: 18px; }
+    .form-grid { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 13px; }
+    .field { display: flex; flex-direction: column; gap: 6px; }
+    .field.full { grid-column: 1 / -1; }
+    label { font-size: 13px; font-weight: 700; color: #334039; }
+    input, select { width: 100%; border: 1px solid #bfc9c2; border-radius: 5px; padding: 10px 11px; background: white; color: var(--ink); }
+    input:focus, select:focus { outline: 2px solid #86d3a1; border-color: var(--green-700); }
+    .actions { display: flex; gap: 9px; flex-wrap: wrap; margin-top: 16px; }
+    .row-actions { display: flex; gap: 7px; flex-wrap: wrap; }
+    .btn { border: 1px solid transparent; border-radius: 5px; padding: 9px 13px; font-weight: 700; }
+    .btn-primary { background: var(--green-700); color: white; }
+    .btn-primary:hover { background: var(--green-800); }
+    .btn-secondary { background: white; border-color: #aebbb2; color: #334039; }
+    .btn-danger { background: white; border-color: #e5aaa5; color: var(--danger); }
+    .btn-small { padding: 6px 9px; font-size: 12px; }
+    .table-wrap { overflow: auto; }
+    table { width: 100%; border-collapse: collapse; min-width: 620px; }
+    th, td { padding: 10px 11px; border-bottom: 1px solid var(--line); text-align: left; font-size: 13px; vertical-align: middle; }
+    th { background: #edf3ef; color: #2a372f; font-size: 12px; text-transform: uppercase; }
+    tbody tr:hover { background: #f8faf8; }
+    .empty { padding: 26px; color: var(--muted); text-align: center; }
+    .notice { display: none; border-radius: 5px; padding: 11px 13px; margin-bottom: 16px; font-size: 14px; }
+    .notice.show { display: block; }
+    .notice.success { background: var(--green-100); color: var(--green-900); }
+    .notice.error { background: var(--danger-bg); color: var(--danger); }
+    .notice.info { background: #eef5ff; color: #244b7a; }
+    .stock-low { color: var(--warning); font-weight: 700; background: var(--warning-bg); padding: 3px 7px; border-radius: 4px; }
+    .status-active { color: var(--green-800); font-weight: 700; }
+    .status-cancelled { color: var(--danger); font-weight: 700; }
+    .sale-builder { display: grid; grid-template-columns: 1.5fr 0.6fr auto; gap: 10px; align-items: end; }
+    .cart { margin-top: 14px; border: 1px solid var(--line); border-radius: 5px; overflow: hidden; }
+    .cart-row { display: grid; grid-template-columns: 1fr auto auto; gap: 12px; padding: 10px 12px; border-bottom: 1px solid var(--line); align-items: center; }
+    .cart-row:last-child { border-bottom: 0; }
+    .cart-total { display: flex; justify-content: space-between; margin-top: 14px; padding-top: 13px; border-top: 1px solid var(--line); font-weight: 700; }
+    .endpoint { font-family: Consolas, monospace; }
+    .method { font-weight: 700; color: var(--green-800); }
+    .footer-note { margin-top: 22px; color: var(--muted); font-size: 13px; }
+
+    @media (max-width: 900px) {
+      .stats { grid-template-columns: repeat(2, 1fr); }
+      .panel-grid, .auth-grid { grid-template-columns: 1fr; }
+    }
+    @media (max-width: 560px) {
+      .topbar-inner, main { padding-left: 15px; padding-right: 15px; }
+      nav { padding: 0 4px; }
+      .stats, .form-grid { grid-template-columns: 1fr; }
+      .field.full { grid-column: auto; }
+      .sale-builder { grid-template-columns: 1fr; }
+    }
   </style>
 </head>
 <body>
-  <header>
-    <h1>INVENTA API</h1>
-    <p>Servicios web para la gestion de clientes, productos y ventas.</p>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">INVENTA <small>Gestión de clientes, productos, inventario y ventas</small></div>
+      <div class="service-state"><span id="serviceDot" class="dot"></span><span id="serviceText">Comprobando servicio...</span></div>
+    </div>
   </header>
+
+  <div class="nav-wrap">
+    <nav aria-label="Módulos de INVENTA">
+      <button class="nav-button active" data-view="inicio">Resumen</button>
+      <button class="nav-button" data-view="usuarios">Usuarios</button>
+      <button class="nav-button" data-view="clientes">Clientes</button>
+      <button class="nav-button" data-view="productos">Productos</button>
+      <button class="nav-button" data-view="ventas">Ventas</button>
+      <button class="nav-button" data-view="documentacion">Endpoints</button>
+    </nav>
+  </div>
+
   <main>
-    <p class="status">Servicio activo</p>
-    <h2>Endpoints disponibles</h2>
-    <table>
-      <thead><tr><th>Metodo</th><th>Endpoint</th><th>Descripcion</th></tr></thead>
-      <tbody>
-        <tr><td class="method">GET</td><td><code>/api/health</code></td><td>Verifica el estado de la API.</td></tr>
-        <tr><td class="method">POST</td><td><code>/api/registro</code></td><td>Registra un usuario.</td></tr>
-        <tr><td class="method">POST</td><td><code>/api/login</code></td><td>Valida credenciales.</td></tr>
-        <tr><td class="method">GET / POST</td><td><code>/api/clientes</code></td><td>Lista o crea clientes.</td></tr>
-        <tr><td class="method">GET / PUT / DELETE</td><td><code>/api/clientes/:id</code></td><td>Consulta, actualiza o elimina un cliente.</td></tr>
-        <tr><td class="method">GET / POST</td><td><code>/api/productos</code></td><td>Lista o crea productos.</td></tr>
-        <tr><td class="method">GET</td><td><code>/api/productos/bajo-stock?limite=5</code></td><td>Identifica productos que requieren reposicion.</td></tr>
-        <tr><td class="method">GET / PUT / DELETE</td><td><code>/api/productos/:id</code></td><td>Consulta, actualiza o elimina un producto.</td></tr>
-        <tr><td class="method">GET / POST</td><td><code>/api/ventas</code></td><td>Lista o registra ventas.</td></tr>
-        <tr><td class="method">GET</td><td><code>/api/ventas/:id</code></td><td>Consulta el detalle de una venta.</td></tr>
-        <tr><td class="method">PUT</td><td><code>/api/ventas/:id/anular</code></td><td>Anula una venta y reintegra sus existencias.</td></tr>
-      </tbody>
-    </table>
-    <p>La documentacion completa, cuerpos JSON, respuestas y codigos HTTP se encuentran en <code>docs/DOCUMENTACION_API.md</code>.</p>
+    <div id="globalNotice" class="notice" role="status"></div>
+
+    <section id="inicio" class="view active">
+      <div class="page-heading"><h1>Resumen de INVENTA</h1><p>Información actualizada directamente desde la API.</p></div>
+      <div class="stats">
+        <div class="stat"><span class="stat-label">Clientes registrados</span><strong id="statClientes" class="stat-value">0</strong></div>
+        <div class="stat"><span class="stat-label">Productos en catálogo</span><strong id="statProductos" class="stat-value">0</strong></div>
+        <div class="stat"><span class="stat-label">Ventas registradas</span><strong id="statVentas" class="stat-value">0</strong></div>
+        <div class="stat"><span class="stat-label">Productos con bajo stock</span><strong id="statBajoStock" class="stat-value">0</strong></div>
+      </div>
+      <div class="panel">
+        <div class="panel-header"><h2>Flujo de trabajo</h2></div>
+        <div class="panel-body">
+          <p>Registra primero un cliente y los productos disponibles. Después crea una venta seleccionando el cliente y agregando productos al detalle. INVENTA calcula el total y descuenta las existencias automáticamente.</p>
+          <div class="actions"><button class="btn btn-primary" data-go="clientes">Registrar cliente</button><button class="btn btn-secondary" data-go="productos">Registrar producto</button><button class="btn btn-secondary" data-go="ventas">Nueva venta</button></div>
+        </div>
+      </div>
+    </section>
+
+    <section id="usuarios" class="view">
+      <div class="page-heading"><h1>Usuarios</h1><p>Registro y validación de acceso al sistema.</p></div>
+      <div class="auth-grid">
+        <div class="panel"><div class="panel-header"><h2>Registrar usuario</h2></div><div class="panel-body">
+          <form id="registerForm"><div class="field"><label for="regUsuario">Usuario</label><input id="regUsuario" required placeholder="Ej. administrador.inventa"></div><div class="field" style="margin-top:13px"><label for="regContrasena">Contraseña</label><input id="regContrasena" type="password" required placeholder="Mínimo recomendado: 8 caracteres"></div><div class="actions"><button class="btn btn-primary" type="submit">Registrar usuario</button></div></form>
+        </div></div>
+        <div class="panel"><div class="panel-header"><h2>Iniciar sesión</h2></div><div class="panel-body">
+          <form id="loginForm"><div class="field"><label for="loginUsuario">Usuario</label><input id="loginUsuario" required></div><div class="field" style="margin-top:13px"><label for="loginContrasena">Contraseña</label><input id="loginContrasena" type="password" required></div><div class="actions"><button class="btn btn-primary" type="submit">Validar credenciales</button></div></form>
+        </div></div>
+      </div>
+    </section>
+
+    <section id="clientes" class="view">
+      <div class="page-heading"><h1>Clientes</h1><p>Información de contacto de los compradores.</p></div>
+      <div class="panel-grid">
+        <div class="panel"><div class="panel-header"><h2 id="clientFormTitle">Nuevo cliente</h2></div><div class="panel-body">
+          <form id="clientForm" class="form-grid">
+            <div class="field"><label for="clienteNombre">Nombre</label><input id="clienteNombre" required></div>
+            <div class="field"><label for="clienteApellido">Apellido</label><input id="clienteApellido" required></div>
+            <div class="field"><label for="clienteDocumento">Documento</label><input id="clienteDocumento" required></div>
+            <div class="field"><label for="clienteTelefono">Teléfono</label><input id="clienteTelefono"></div>
+            <div class="field full"><label for="clienteCorreo">Correo</label><input id="clienteCorreo" type="email" required></div>
+            <div class="field full"><label for="clienteDireccion">Dirección</label><input id="clienteDireccion"></div>
+            <div class="actions field full"><button id="clientSubmitButton" class="btn btn-primary" type="submit">Guardar cliente</button><button id="clientCancelButton" class="btn btn-secondary" type="button">Limpiar</button></div>
+          </form>
+        </div></div>
+        <div class="panel"><div class="panel-header"><h2>Clientes registrados</h2><button class="btn btn-secondary btn-small" data-refresh="clientes">Actualizar</button></div><div id="clientTable" class="table-wrap"></div></div>
+      </div>
+    </section>
+
+    <section id="productos" class="view">
+      <div class="page-heading"><h1>Productos e inventario</h1><p>Catálogo, categorías y control de existencias.</p></div>
+      <div class="panel-grid">
+        <div class="panel"><div class="panel-header"><h2 id="productFormTitle">Nuevo producto</h2></div><div class="panel-body">
+          <form id="productForm" class="form-grid">
+            <div class="field full"><label for="productoNombre">Nombre</label><input id="productoNombre" required></div>
+            <div class="field full"><label for="productoDescripcion">Descripción</label><input id="productoDescripcion"></div>
+            <div class="field"><label for="productoPrecio">Precio</label><input id="productoPrecio" type="number" min="1" step="0.01" required></div>
+            <div class="field"><label for="productoStock">Stock</label><input id="productoStock" type="number" min="0" step="1" required></div>
+            <div class="field full"><label for="productoCategoria">Categoría</label><select id="productoCategoria" required><option value="">Seleccionar</option><option>Ropa</option><option>Calzado</option><option>Accesorios</option><option value="Electronica">Electrónica</option><option>Hogar</option><option>Otros</option></select></div>
+            <div class="actions field full"><button id="productSubmitButton" class="btn btn-primary" type="submit">Guardar producto</button><button id="productCancelButton" class="btn btn-secondary" type="button">Limpiar</button></div>
+          </form>
+        </div></div>
+        <div class="panel"><div class="panel-header"><h2>Catálogo</h2><div><label for="stockLimit" style="margin-right:5px">Límite</label><input id="stockLimit" type="number" value="5" min="0" style="width:65px;padding:6px"><button id="lowStockButton" class="btn btn-secondary btn-small">Bajo stock</button></div></div><div id="productTable" class="table-wrap"></div></div>
+      </div>
+    </section>
+
+    <section id="ventas" class="view">
+      <div class="page-heading"><h1>Ventas</h1><p>Registro de operaciones y devolución de existencias al anular.</p></div>
+      <div class="panel-grid">
+        <div class="panel"><div class="panel-header"><h2>Nueva venta</h2></div><div class="panel-body">
+          <div class="field"><label for="ventaCliente">Cliente</label><select id="ventaCliente"><option value="">Seleccionar cliente</option></select></div>
+          <div class="sale-builder" style="margin-top:13px"><div class="field"><label for="ventaProducto">Producto</label><select id="ventaProducto"><option value="">Seleccionar producto</option></select></div><div class="field"><label for="ventaCantidad">Cantidad</label><input id="ventaCantidad" type="number" min="1" value="1"></div><button id="addProductButton" class="btn btn-secondary">Agregar</button></div>
+          <div id="cart" class="cart"><div class="empty">Aún no hay productos en el detalle.</div></div>
+          <div class="cart-total"><span>Total estimado</span><span id="cartTotal">$0</span></div>
+          <div class="actions"><button id="createSaleButton" class="btn btn-primary">Registrar venta</button><button id="clearCartButton" class="btn btn-secondary">Vaciar detalle</button></div>
+        </div></div>
+        <div class="panel"><div class="panel-header"><h2>Historial de ventas</h2><button class="btn btn-secondary btn-small" data-refresh="ventas">Actualizar</button></div><div id="saleTable" class="table-wrap"></div></div>
+      </div>
+    </section>
+
+    <section id="documentacion" class="view">
+      <div class="page-heading"><h1>Endpoints disponibles</h1><p>Referencia rápida para realizar las pruebas en Postman.</p></div>
+      <div class="panel"><div class="table-wrap"><table><thead><tr><th>Método</th><th>Endpoint</th><th>Descripción</th></tr></thead><tbody>
+        <tr><td class="method">GET</td><td class="endpoint">/api/health</td><td>Verifica el estado de la API.</td></tr>
+        <tr><td class="method">POST</td><td class="endpoint">/api/registro</td><td>Registra un usuario.</td></tr>
+        <tr><td class="method">POST</td><td class="endpoint">/api/login</td><td>Valida credenciales.</td></tr>
+        <tr><td class="method">GET / POST</td><td class="endpoint">/api/clientes</td><td>Lista o crea clientes.</td></tr>
+        <tr><td class="method">GET / PUT / DELETE</td><td class="endpoint">/api/clientes/:id</td><td>Consulta, actualiza o elimina un cliente.</td></tr>
+        <tr><td class="method">GET / POST</td><td class="endpoint">/api/productos</td><td>Lista o crea productos.</td></tr>
+        <tr><td class="method">GET</td><td class="endpoint">/api/productos/bajo-stock?limite=5</td><td>Consulta productos que requieren reposición.</td></tr>
+        <tr><td class="method">GET / PUT / DELETE</td><td class="endpoint">/api/productos/:id</td><td>Consulta, actualiza o elimina un producto.</td></tr>
+        <tr><td class="method">GET / POST</td><td class="endpoint">/api/ventas</td><td>Lista o registra ventas.</td></tr>
+        <tr><td class="method">GET</td><td class="endpoint">/api/ventas/:id</td><td>Consulta una venta.</td></tr>
+        <tr><td class="method">PUT</td><td class="endpoint">/api/ventas/:id/anular</td><td>Anula una venta y devuelve las existencias.</td></tr>
+      </tbody></table></div></div>
+      <p class="footer-note">La documentación detallada se encuentra en <strong>docs/DOCUMENTACION_API.md</strong> y <strong>docs/openapi.yaml</strong>.</p>
+    </section>
   </main>
+
+  <script>
+    const state = { clientes: [], productos: [], ventas: [], cart: [], editingClientId: null, editingProductId: null };
+    const field = id => document.getElementById(id);
+    const money = value => new Intl.NumberFormat('es-CO', { style: 'currency', currency: 'COP', maximumFractionDigits: 0 }).format(value || 0);
+    const escapeHtml = value => String(value ?? '').replace(/[&<>'"]/g, char => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', "'": '&#39;', '"': '&quot;' }[char]));
+
+    async function api(route, options = {}) {
+      const config = { ...options, headers: { 'Content-Type': 'application/json', ...(options.headers || {}) } };
+      const response = await fetch(route, config);
+      const data = await response.json().catch(() => ({}));
+      if (!response.ok) throw new Error(data.error || `Error ${response.status}`);
+      return data;
+    }
+
+    function notice(message, type = 'success') {
+      const element = document.getElementById('globalNotice');
+      element.textContent = message;
+      element.className = `notice show ${type}`;
+      clearTimeout(notice.timer);
+      notice.timer = setTimeout(() => element.className = 'notice', 5000);
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    function showView(id) {
+      document.querySelectorAll('.view').forEach(view => view.classList.toggle('active', view.id === id));
+      document.querySelectorAll('.nav-button').forEach(button => button.classList.toggle('active', button.dataset.view === id));
+      if (id === 'inicio') refreshDashboard();
+      if (id === 'clientes') loadClients();
+      if (id === 'productos') loadProducts();
+      if (id === 'ventas') loadSalesData();
+    }
+
+    async function checkHealth() {
+      try {
+        const data = await api('/api/health');
+        document.getElementById('serviceDot').classList.add('online');
+        document.getElementById('serviceText').textContent = `${data.servicio} activa`;
+      } catch {
+        document.getElementById('serviceText').textContent = 'Servicio no disponible';
+      }
+    }
+
+    async function refreshDashboard() {
+      try {
+        const [clientes, productos, ventas, bajoStock] = await Promise.all([api('/api/clientes'), api('/api/productos'), api('/api/ventas'), api('/api/productos/bajo-stock?limite=5')]);
+        document.getElementById('statClientes').textContent = clientes.length;
+        document.getElementById('statProductos').textContent = productos.length;
+        document.getElementById('statVentas').textContent = ventas.length;
+        document.getElementById('statBajoStock').textContent = bajoStock.cantidad;
+      } catch (error) { notice(error.message, 'error'); }
+    }
+
+    async function loadClients() {
+      try {
+        state.clientes = await api('/api/clientes');
+        document.getElementById('clientTable').innerHTML = state.clientes.length ? `<table><thead><tr><th>Cliente</th><th>Documento</th><th>Contacto</th><th>Acciones</th></tr></thead><tbody>${state.clientes.map(item => `<tr><td>${escapeHtml(item.nombre)} ${escapeHtml(item.apellido)}</td><td>${escapeHtml(item.documento)}</td><td>${escapeHtml(item.correo)}<br>${escapeHtml(item.telefono)}</td><td><div class="row-actions"><button class="btn btn-secondary btn-small" onclick="editClient(${item.id})">Editar</button><button class="btn btn-danger btn-small" onclick="deleteClient(${item.id})">Eliminar</button></div></td></tr>`).join('')}</tbody></table>` : '<div class="empty">No hay clientes registrados.</div>';
+      } catch (error) { notice(error.message, 'error'); }
+    }
+
+    async function loadProducts(route = '/api/productos') {
+      try {
+        const result = await api(route);
+        const products = Array.isArray(result) ? result : result.productos;
+        if (route === '/api/productos') state.productos = products;
+        document.getElementById('productTable').innerHTML = products.length ? `<table><thead><tr><th>Producto</th><th>Categoría</th><th>Precio</th><th>Stock</th><th>Acciones</th></tr></thead><tbody>${products.map(item => `<tr><td><strong>${escapeHtml(item.nombre)}</strong><br>${escapeHtml(item.descripcion)}</td><td>${escapeHtml(item.categoria)}</td><td>${money(item.precio)}</td><td><span class="${item.stock <= 5 ? 'stock-low' : ''}">${item.stock}</span></td><td><div class="row-actions"><button class="btn btn-secondary btn-small" onclick="editProduct(${item.id})">Editar</button><button class="btn btn-danger btn-small" onclick="deleteProduct(${item.id})">Eliminar</button></div></td></tr>`).join('')}</tbody></table>` : '<div class="empty">No se encontraron productos.</div>';
+      } catch (error) { notice(error.message, 'error'); }
+    }
+
+    async function loadSalesData() {
+      try {
+        [state.clientes, state.productos, state.ventas] = await Promise.all([api('/api/clientes'), api('/api/productos'), api('/api/ventas')]);
+        document.getElementById('ventaCliente').innerHTML = '<option value="">Seleccionar cliente</option>' + state.clientes.map(item => `<option value="${item.id}">${escapeHtml(item.nombre)} ${escapeHtml(item.apellido)} - ${escapeHtml(item.documento)}</option>`).join('');
+        document.getElementById('ventaProducto').innerHTML = '<option value="">Seleccionar producto</option>' + state.productos.filter(item => item.stock > 0).map(item => `<option value="${item.id}">${escapeHtml(item.nombre)} | ${money(item.precio)} | stock ${item.stock}</option>`).join('');
+        document.getElementById('saleTable').innerHTML = state.ventas.length ? `<table><thead><tr><th>Venta</th><th>Cliente</th><th>Total</th><th>Estado</th><th>Acción</th></tr></thead><tbody>${state.ventas.map(item => `<tr><td>#${item.id}<br>${new Date(item.fechaVenta).toLocaleString('es-CO')}</td><td>${escapeHtml(item.nombreCliente)}</td><td>${money(item.total)}</td><td><span class="${item.estado === 'ACTIVA' ? 'status-active' : 'status-cancelled'}">${item.estado}</span></td><td>${item.estado === 'ACTIVA' ? `<button class="btn btn-danger btn-small" onclick="cancelSale(${item.id})">Anular</button>` : 'Sin acciones'}</td></tr>`).join('')}</tbody></table>` : '<div class="empty">No hay ventas registradas.</div>';
+        renderCart();
+      } catch (error) { notice(error.message, 'error'); }
+    }
+
+    function renderCart() {
+      const cart = document.getElementById('cart');
+      if (!state.cart.length) cart.innerHTML = '<div class="empty">Aún no hay productos en el detalle.</div>';
+      else cart.innerHTML = state.cart.map((item, index) => `<div class="cart-row"><span>${escapeHtml(item.nombre)} x ${item.cantidad}</span><strong>${money(item.precio * item.cantidad)}</strong><button class="btn btn-danger btn-small" onclick="removeCartItem(${index})">Quitar</button></div>`).join('');
+      document.getElementById('cartTotal').textContent = money(state.cart.reduce((total, item) => total + item.precio * item.cantidad, 0));
+    }
+
+    function removeCartItem(index) { state.cart.splice(index, 1); renderCart(); }
+
+    function resetClientForm() {
+      state.editingClientId = null;
+      field('clientForm').reset();
+      field('clientFormTitle').textContent = 'Nuevo cliente';
+      field('clientSubmitButton').textContent = 'Guardar cliente';
+    }
+
+    function editClient(id) {
+      const item = state.clientes.find(client => client.id === id);
+      if (!item) return;
+      state.editingClientId = id;
+      field('clienteNombre').value = item.nombre;
+      field('clienteApellido').value = item.apellido;
+      field('clienteDocumento').value = item.documento;
+      field('clienteTelefono').value = item.telefono;
+      field('clienteCorreo').value = item.correo;
+      field('clienteDireccion').value = item.direccion;
+      field('clientFormTitle').textContent = `Editar cliente #${id}`;
+      field('clientSubmitButton').textContent = 'Guardar cambios';
+      field('clientForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    function resetProductForm() {
+      state.editingProductId = null;
+      field('productForm').reset();
+      field('productFormTitle').textContent = 'Nuevo producto';
+      field('productSubmitButton').textContent = 'Guardar producto';
+    }
+
+    function editProduct(id) {
+      const item = state.productos.find(product => product.id === id);
+      if (!item) return;
+      state.editingProductId = id;
+      field('productoNombre').value = item.nombre;
+      field('productoDescripcion').value = item.descripcion;
+      field('productoPrecio').value = item.precio;
+      field('productoStock').value = item.stock;
+      field('productoCategoria').value = item.categoria;
+      field('productFormTitle').textContent = `Editar producto #${id}`;
+      field('productSubmitButton').textContent = 'Guardar cambios';
+      field('productForm').scrollIntoView({ behavior: 'smooth', block: 'start' });
+    }
+
+    async function deleteClient(id) {
+      if (!confirm('¿Eliminar este cliente?')) return;
+      try { await api(`/api/clientes/${id}`, { method: 'DELETE' }); notice('Cliente eliminado.'); resetClientForm(); loadClients(); refreshDashboard(); } catch (error) { notice(error.message, 'error'); }
+    }
+    async function deleteProduct(id) {
+      if (!confirm('¿Eliminar este producto?')) return;
+      try { await api(`/api/productos/${id}`, { method: 'DELETE' }); notice('Producto eliminado.'); resetProductForm(); loadProducts(); refreshDashboard(); } catch (error) { notice(error.message, 'error'); }
+    }
+    async function cancelSale(id) {
+      if (!confirm(`¿Anular la venta #${id} y devolver sus unidades al inventario?`)) return;
+      try { await api(`/api/ventas/${id}/anular`, { method: 'PUT' }); notice('Venta anulada. Las existencias fueron reintegradas.'); loadSalesData(); refreshDashboard(); } catch (error) { notice(error.message, 'error'); }
+    }
+
+    document.querySelectorAll('.nav-button').forEach(button => button.addEventListener('click', () => showView(button.dataset.view)));
+    document.querySelectorAll('[data-go]').forEach(button => button.addEventListener('click', () => showView(button.dataset.go)));
+    document.querySelectorAll('[data-refresh]').forEach(button => button.addEventListener('click', () => button.dataset.refresh === 'clientes' ? loadClients() : loadSalesData()));
+    field('clientCancelButton').addEventListener('click', resetClientForm);
+    field('productCancelButton').addEventListener('click', resetProductForm);
+
+    document.getElementById('registerForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      try { const result = await api('/api/registro', { method: 'POST', body: JSON.stringify({ usuario: field('regUsuario').value, contrasena: field('regContrasena').value }) }); notice(result.mensaje); event.target.reset(); } catch (error) { notice(error.message, 'error'); }
+    });
+    document.getElementById('loginForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      try { const result = await api('/api/login', { method: 'POST', body: JSON.stringify({ usuario: field('loginUsuario').value, contrasena: field('loginContrasena').value }) }); notice(`${result.mensaje} Usuario: ${result.usuario}`); } catch (error) { notice(error.message, 'error'); }
+    });
+    document.getElementById('clientForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const body = { nombre: field('clienteNombre').value, apellido: field('clienteApellido').value, documento: field('clienteDocumento').value, correo: field('clienteCorreo').value, telefono: field('clienteTelefono').value, direccion: field('clienteDireccion').value };
+      const editing = state.editingClientId;
+      const route = editing ? `/api/clientes/${editing}` : '/api/clientes';
+      try { await api(route, { method: editing ? 'PUT' : 'POST', body: JSON.stringify(body) }); notice(editing ? 'Cliente actualizado correctamente.' : 'Cliente registrado correctamente.'); resetClientForm(); loadClients(); refreshDashboard(); } catch (error) { notice(error.message, 'error'); }
+    });
+    document.getElementById('productForm').addEventListener('submit', async event => {
+      event.preventDefault();
+      const body = { nombre: field('productoNombre').value, descripcion: field('productoDescripcion').value, precio: Number(field('productoPrecio').value), stock: Number(field('productoStock').value), categoria: field('productoCategoria').value };
+      const editing = state.editingProductId;
+      const route = editing ? `/api/productos/${editing}` : '/api/productos';
+      try { await api(route, { method: editing ? 'PUT' : 'POST', body: JSON.stringify(body) }); notice(editing ? 'Producto actualizado correctamente.' : 'Producto registrado correctamente.'); resetProductForm(); loadProducts(); refreshDashboard(); } catch (error) { notice(error.message, 'error'); }
+    });
+    document.getElementById('lowStockButton').addEventListener('click', () => loadProducts(`/api/productos/bajo-stock?limite=${Number(field('stockLimit').value || 5)}`));
+    document.getElementById('addProductButton').addEventListener('click', () => {
+      const id = Number(field('ventaProducto').value), cantidad = Number(field('ventaCantidad').value);
+      const producto = state.productos.find(item => item.id === id);
+      if (!producto || !Number.isInteger(cantidad) || cantidad < 1) return notice('Selecciona un producto y una cantidad válida.', 'error');
+      if (cantidad > producto.stock) return notice(`Solo hay ${producto.stock} unidades disponibles.`, 'error');
+      if (state.cart.some(item => item.id === id)) return notice('El producto ya está en el detalle.', 'error');
+      state.cart.push({ id, nombre: producto.nombre, precio: producto.precio, cantidad }); renderCart();
+    });
+    document.getElementById('clearCartButton').addEventListener('click', () => { state.cart = []; renderCart(); });
+    document.getElementById('createSaleButton').addEventListener('click', async () => {
+      const idCliente = Number(field('ventaCliente').value);
+      if (!idCliente || !state.cart.length) return notice('Selecciona un cliente y agrega al menos un producto.', 'error');
+      const body = { idCliente, detalles: state.cart.map(item => ({ idProducto: item.id, cantidad: item.cantidad })) };
+      try { const venta = await api('/api/ventas', { method: 'POST', body: JSON.stringify(body) }); notice(`Venta #${venta.id} registrada por ${money(venta.total)}.`); state.cart = []; loadSalesData(); refreshDashboard(); } catch (error) { notice(error.message, 'error'); }
+    });
+
+    checkHealth();
+    refreshDashboard();
+  </script>
 </body>
 </html>
