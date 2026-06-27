@@ -1,7 +1,9 @@
 HISTORIAL DE VERSIONAMIENTO - INVENTA API
 Evidencia GA7-220501096-AA5-EV03
 
-Publicación  Vincular el repositorio público de la evidencia en GitHub
+2a13161  Ajustar redacción a un tono claro y natural
+464f723  Vincular repositorio público de la evidencia
+6a8387c  Registrar trazabilidad del versionamiento
 908871d  Corregir identidad visual y agregar documento institucional
 4cc55bf  Agregar pruebas de reglas de inventario y ventas
 1da30d3  Documentar diseño y contratos de la API
@@ -10,5 +12,6 @@ ef020fa  Implementar servicios REST del sistema INVENTA
 Rama principal: main
 Herramienta utilizada: Git
 
-Cada registro corresponde a una fase funcional del desarrollo. El historial
-completo también se conserva dentro del directorio .git del proyecto.
+Cada registro corresponde a una fase del desarrollo. El historial completo
+se puede consultar en el repositorio indicado en el archivo
+ENLACE_REPOSITORIO.txt.
