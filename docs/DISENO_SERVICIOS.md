@@ -2,7 +2,7 @@
 
 ## 1. Contexto del proyecto
 
-INVENTA administra las operaciones básicas de un establecimiento comercial: datos de clientes, catálogo de productos, existencias y ventas. Las evidencias anteriores implementaron estas entidades mediante Java/JSP y posteriormente con Spring Boot. La presente API conserva ese modelo y expone sus operaciones mediante HTTP y JSON.
+INVENTA es el proyecto que se viene trabajando para organizar clientes, productos, existencias y ventas. En evidencias anteriores estos módulos se realizaron con Java/JSP y después con Spring Boot. Para esta evidencia se construyó una API que permite usar las mismas funciones mediante solicitudes HTTP y datos en formato JSON.
 
 ## 2. Necesidades identificadas
 
@@ -34,13 +34,13 @@ El documento identifica de manera única al cliente. Se conserva la separación 
 
 `id`, `nombre`, `descripcion`, `precio`, `stock`, `categoria`.
 
-Las categorías admitidas corresponden al formulario histórico de INVENTA: Ropa, Calzado, Accesorios, Electrónica, Hogar y Otros. En JSON se usa `Electronica` sin tilde para simplificar la interoperabilidad.
+Se conservaron las categorías que ya tenía el formulario de INVENTA: Ropa, Calzado, Accesorios, Electrónica, Hogar y Otros. En los datos JSON se escribe `Electronica` sin tilde para evitar problemas al enviar la información.
 
 ### Venta y detalle
 
 La venta contiene `id`, `idCliente`, `nombreCliente`, `fechaVenta`, `total`, `estado` y `detalles`. Cada detalle guarda `idProducto`, `nombreProducto`, `cantidad`, `precioUnitario` y `subtotal`.
 
-Los nombres del cliente y del producto quedan registrados como referencia histórica. Así, una consulta posterior conserva el contexto comercial aunque los datos maestros cambien.
+También se guarda el nombre del cliente y del producto dentro de la venta. De esta manera, al consultar una venta antigua todavía se puede saber a quién se realizó y qué productos se vendieron, incluso si después se actualizan esos datos.
 
 ## 4. Reglas de negocio
 
@@ -54,18 +54,18 @@ Los nombres del cliente y del producto quedan registrados como referencia histó
 8. El total se calcula en el servidor; no se acepta un total enviado por el cliente.
 9. Una venta nueva queda en estado `ACTIVA` y descuenta inventario.
 10. Una venta anulada devuelve las unidades y no puede anularse por segunda vez.
-11. No se eliminan clientes ni productos vinculados con ventas, para conservar trazabilidad.
+11. No se eliminan clientes ni productos que ya aparecen en una venta, porque se perdería parte del historial.
 
 ## 5. Arquitectura
 
 - `src/server.js`: inicia el servidor y define el puerto.
 - `src/app.js`: rutas, validaciones y reglas de negocio.
 - `src/store.js`: lectura y escritura controlada de la base JSON.
-- `data/db.json`: persistencia local portable.
+- `data/db.json`: archivo donde se guardan los datos para las pruebas.
 - `public/index.html`: índice de documentación del servicio.
 - `test/api.test.js`: verificación automatizada de los flujos principales.
 
-Se eligió Node.js con módulos nativos para que el instructor pueda ejecutar la solución sin descargar paquetes. La persistencia JSON permite demostrar el ciclo completo de los servicios y mantener los datos entre ejecuciones.
+Se utilizó Node.js con sus módulos nativos para que el proyecto pueda ejecutarse sin instalar paquetes adicionales. Se decidió guardar la información en un archivo JSON porque facilita las pruebas y permite conservar los datos sin instalar una base de datos aparte.
 
 ## 6. Convenciones HTTP
 

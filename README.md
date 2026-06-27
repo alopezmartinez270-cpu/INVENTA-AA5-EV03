@@ -1,6 +1,6 @@
 # INVENTA API
 
-Proyecto de servicios web para INVENTA, sistema de control de clientes, productos, inventario y ventas. Esta versión traslada a una API REST las entidades desarrolladas previamente en los módulos Java/JSP y Spring Boot del proyecto formativo.
+Este proyecto contiene los servicios web del sistema INVENTA. La API permite trabajar con los clientes, productos, existencias y ventas que ya se habían desarrollado en las evidencias anteriores con Java/JSP y Spring Boot.
 
 ## Alcance
 
@@ -20,7 +20,7 @@ Proyecto de servicios web para INVENTA, sistema de control de clientes, producto
 3. Abrir `http://localhost:3000/`.
 4. Probar los endpoints desde Postman usando `http://localhost:3000` como URL base.
 
-No se requieren paquetes externos ni una instalación de base de datos. La información se conserva en `data/db.json`.
+No se necesitan paquetes externos ni una base de datos adicional. Para facilitar la ejecución y las pruebas, la información se guarda en `data/db.json`.
 
 ## Pruebas
 
@@ -34,7 +34,7 @@ Las pruebas cubren autenticación, clientes, productos, control de stock, ventas
 
 ## Documentación
 
-- `docs/DISENO_SERVICIOS.md`: análisis, modelo y decisiones de diseño.
+- `docs/DISENO_SERVICIOS.md`: análisis, modelo y explicación del diseño realizado.
 - `docs/DOCUMENTACION_API.md`: uso detallado de cada servicio.
 - `docs/openapi.yaml`: contrato OpenAPI 3.0 importable en Postman.
 - `ENDPOINTS_API.txt`: inventario rápido de endpoints.
